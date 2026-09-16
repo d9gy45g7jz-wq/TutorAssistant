@@ -33,8 +33,18 @@ logging.basicConfig(level=logging.INFO)
 # 配置
 # =====================================
 
-AMAP_KEY = os.getenv("AMAP_KEY", "")
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY", "")
+def read_env(name: str) -> str:
+    """读取环境变量，顺带清理误粘贴进来的引号和首尾空白。
+
+    在各类云平台的配置界面里粘贴密钥时，很容易带上引号或末尾空格，
+    这会让上游服务返回 401，所以这里统一处理掉。
+    """
+    value = os.getenv(name, "") or ""
+    return value.strip().strip('"').strip("'").strip()
+
+
+AMAP_KEY = read_env("AMAP_KEY")
+DEEPSEEK_API_KEY = read_env("DEEPSEEK_API_KEY")
 
 DEEPSEEK_ENDPOINT = os.getenv(
     "DEEPSEEK_BASE_URL",
@@ -170,10 +180,16 @@ async def root():
 @app.get("/api/health")
 async def health():
     """健康检查：浏览器直接打开 /api/health 就能确认服务与密钥状态。"""
+    raw_deepseek = os.getenv("DEEPSEEK_API_KEY", "") or ""
     return {
         "success": True,
         "deepseek_configured": bool(DEEPSEEK_API_KEY),
         "amap_configured": bool(AMAP_KEY),
+        # 只暴露长度和格式特征，不暴露密钥本身，便于排查配置问题
+        "deepseek_key_length": len(DEEPSEEK_API_KEY),
+        "deepseek_key_has_quotes": ('"' in raw_deepseek) or ("'" in raw_deepseek),
+        "deepseek_key_has_whitespace": raw_deepseek != raw_deepseek.strip(),
+        "amap_key_length": len(AMAP_KEY),
     }
 
 
