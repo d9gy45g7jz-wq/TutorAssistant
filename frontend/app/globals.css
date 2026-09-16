@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f1f5f9;
+  --foreground: #0f172a;
+
+  /* 本页面固定使用浅色主题：
+     卡片是白底，若跟随系统暗色偏好会出现浅色文字叠白底、内容看不清的问题 */
+  color-scheme: light;
 }
 
 @theme inline {
@@ -12,15 +16,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), "PingFang SC", "Microsoft YaHei",
+    "Noto Sans CJK SC", system-ui, -apple-system, "Segoe UI", sans-serif;
 }

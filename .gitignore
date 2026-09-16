@@ -1,0 +1,12 @@
+# 编辑器 / 系统文件
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 依赖与构建产物由子目录的 .gitignore 单独管理：
+#   backend/.gitignore  -> venv/、__pycache__/、.env
+#   frontend/.gitignore -> node_modules/、.next/、.env*
